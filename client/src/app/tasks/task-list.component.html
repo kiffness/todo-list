@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="todo-list">
+
+    <form (ngSubmit)="add(taskNgForm)" #taskNgForm="ngForm">
+      <div class="input-group">
+        <input readonly name="date" [matDatepicker]="picker" [(ngModel)]="newTask.date">
+        <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </div>
+
+      <div class="input-group">
+        <input #newTaskNgModel="ngModel" required minlength="4" name="taskTitle" type="text" placeholder="Todo" [(ngModel)]="newTask.title"> 
+        <button class="add-button">+</button>
+      </div>
+      <div *ngIf="newTaskNgModel.invalid && (newTaskNgModel.touched || newTaskNgModel.dirty)" class="validation-error">
+        <div *ngIf="newTaskNgModel.errors?.['required']"> <!-- Will only show if the type of error is required -->
+          Task title is required
+        </div>
+        <div *ngIf="newTaskNgModel.errors?.['minlength']"> <!-- Will only show if the type of error is minlength -->
+          Task title must at least have 4 characters
+        </div>
+      </div>
+    </form>
+
+      <table>
+        <tr *ngFor="let task of tasks | async; let i = index" [class.even]="i%2==0" [class.odd]="i%2">
+          <td>
+            <p [class.is-done]="task.isDone"> <!-- set the css class is-done when task.isDone property true -->
+              {{ task.title }}
+            </p>
+          </td>
+          <td>
+            <button (click)="remove(task)" class="remove-button">X</button>
+            <button (click)="task.toggleIsDone()" class="done-button">
+              {{task.isDone? "Undo" : "Done"}}
+            </button>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
